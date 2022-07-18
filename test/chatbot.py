@@ -87,8 +87,10 @@ except:
 
 def bag_of_words(s, words):
     bag = [ 0 for _ in range(len(words))]
-    s_words = nltk.word_tokenize(s) 
-    s_words = [stremmer.stem(word.lower() for word in s_words)]
+    s_words = nltk.word_tokenize(s)
+
+    s_words = [stremmer.stem(word.lower()) for word in s_words]
+
 
 
     for se in s_words:
@@ -106,22 +108,21 @@ def chat():
         inp = input("you:")
         if inp.lower() == "quit":
             break
-
-        result =model.predict([bag_of_words(inp ,words)]) 
+        result = model.predict([bag_of_words(inp ,words)])[0]
         result_index = np.argmax(result)
-        tag = labels["results_index"]
-        print(result)
-
+        tag = labels[result_index]
+        
         if result[result_index] > 0.7:
 
             for tg in data["intents"]:
                 if tg["tag"] == tag:
-                    responses =tg["responses"]
+                    responses = tg["response"]
 
             print(random.choice(responses)) 
 
         else:
 
             print("i didnt get it")   
+
 
 chat()
